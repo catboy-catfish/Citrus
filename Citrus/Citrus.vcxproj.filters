@@ -453,4 +453,7 @@
       <Filter>Graphics\Resource Files</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assimp-vc140-mt.dll" />
+  </ItemGroup>
 </Project>

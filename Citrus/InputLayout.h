@@ -14,12 +14,14 @@ public:
 		VertexShader* vs)
 	{
 		HRESULT hr;
+		
 		//create input layout
-		hr = pDevice->CreateInputLayout(layout.data(), (UINT)layout.size(),
-			vs->GetBytecode()->GetBufferPointer(),
-			vs->GetBytecode()->GetBufferSize(),
-			&pil);
-		if (FAILED(hr)) { Error::Log(hr, "Failed to create input layout."); }
+		hr = pDevice->CreateInputLayout(layout.data(), (UINT)layout.size(), vs->GetBytecode()->GetBufferPointer(), vs->GetBytecode()->GetBufferSize(), &pil);
+		
+		if (FAILED(hr)) 
+		{ 
+			Error::Log(hr, "Failed to create input layout.");
+		}
 	}
 	~InputLayout() = default;
 

@@ -11,20 +11,70 @@ class UI
 public:
 	UI() = default;
 
-	void ClassicUI(GameObject* gameObject, std::string uiTitle, float pos[3], float rot[3], float scale[3],
-		bool& isDestroyed) const;
+	void ClassicUI
+	(
+		GameObject* gameObject,
+		std::string uiTitle,
+		float pos[3],
+		float rot[3],
+		float scale[3],
+		bool& isDestroyed
+	) const;
 	
-	void PointLight(Model* model, const std::string uiTitle, float pos[3], float rot[3], float scale[3], float* Intensity,
-		float* ambientIntensity, BOOL* normalMappingEnabled, float* specularIntensity, BOOL* reflectionEnabled, float* reflectionIntensity, XMFLOAT3* lightColor) const;
+	void PointLight
+	(
+		Model* model, 
+		const std::string uiTitle, 
+		float pos[3], 
+		float rot[3], 
+		float scale[3], 
+		float* Intensity,
+		float* ambientIntensity, 
+		BOOL* normalMappingEnabled, 
+		float* specularIntensity, 
+		BOOL* reflectionEnabled, 
+		float* reflectionIntensity, 
+		XMFLOAT3* lightColor
+	) const;
 	
-	static void DeveloperUI(std::string adapter_name, const std::string cpu_usage,
-		const std::string fps, Camera3D* cam3d,
-		bool* wireframeEnabled, XMFLOAT3* wireColor, bool* fogEnabled, XMFLOAT4* fogColor, float* fogStart,
-		float* fogEnd, bool* vsync, bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
-		bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
-		float* area, float* fallOff, float* radius, float* exposure, float* gamma, BOOL* toneMappingEnabled,
-		float* bloomIntensity, BOOL* bloomEnabled, std::string& verisonStr, BOOL* ssrEnabled, float* minRaySteps,
-		float* reflectivity, D3D_DRIVER_TYPE& pDriverType);
+	static void DeveloperUI
+	(
+		std::string adapter_name, 
+		const std::string cpu_usage,
+		const std::string fps, 
+		Camera3D* cam3d,
+		bool* wireframeEnabled, 
+		XMFLOAT3* wireColor, 
+		bool* fogEnabled, 
+		XMFLOAT4* fogColor, 
+		float* fogStart,
+		float* fogEnd, 
+		bool* vsync, 
+		bool* gridMapEnabled, 
+		XMFLOAT3* gridMapColor, 
+		Graphics* gfx, 
+		HWND hwnd, 
+		App* app, 
+		bool* msaaEnabled,
+		bool* blurEnabled, 
+		float* blurIntensity, 
+		BOOL* ssaoEnabled, 
+		float* totalStrength, 
+		float* base,
+		float* area, 
+		float* fallOff, 
+		float* radius, 
+		float* exposure, 
+		float* gamma, 
+		BOOL* toneMappingEnabled,
+		float* bloomIntensity, 
+		BOOL* bloomEnabled, 
+		std::string& verisonStr, 
+		BOOL* ssrEnabled, 
+		float* minRaySteps,
+		float* reflectivity, 
+		D3D_DRIVER_TYPE& pDriverType
+	);
 
 	static void ToolBar(bool* gridMapEnabled, bool* wireframeEnabled, bool* fogEnabled,
 		bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,

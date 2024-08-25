@@ -7,8 +7,7 @@ namespace wrl = Microsoft::WRL;
 class App : WndProc
 {
 public:
-	void Init(const std::string wndName, const std::string className, const HINSTANCE hInstance, const int width, const int height,
-		double& version);
+	void Init(const std::string wndName, const std::string className, const HINSTANCE hInstance, const int width, const int height, double& version);
 	App() = default;
 	App(const App&) = default;
 	~App() = default;

@@ -15,14 +15,10 @@ public:
 		HDR,
 	};
 public:
-	RenderTarget(ID3D11Device* pDevice, 
-		ID3D11DeviceContext* pContext, int width,
-		int height, UINT msaaQuality, bool msaaEnabled,
-		Usage usage);
+	RenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height, UINT msaaQuality, bool msaaEnabled, Usage usage);
 	void BindAsTexture(ID3D11DeviceContext* pContext, UINT slot) const noexcept;
 	void BindAsTarget(ID3D11DeviceContext* pContext) const noexcept;
-	void BindAsTarget(ID3D11DeviceContext* pContext,
-		ID3D11DepthStencilView* view) const noexcept;
+	void BindAsTarget(ID3D11DeviceContext* pContext, ID3D11DepthStencilView* view) const noexcept;
 	void Clear(ID3D11DeviceContext* pContext, float col[]) const noexcept;
 	DXGI_FORMAT MapUsageTyped(RenderTarget::Usage usage);
 private:

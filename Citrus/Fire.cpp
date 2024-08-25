@@ -8,25 +8,19 @@ float distortion2X=0.1f, distortion2Y=0.3f;
 float distortion3X = 0.1f, distortion3Y = 0.1f;
 float distortionScale=0.8f, distortionBias=0.5f;
 
-Fire::Fire(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:
-	mDevice(pDevice),
-	mContext(pContext)
+Fire::Fire(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : mDevice(pDevice), mContext(pContext)
 {
 	//init shaders
 	mVS.Init(L"VSFire.cso", mDevice.Get());
 	mPS.Init(L"PSFire.cso", mDevice.Get());
 	//init and create input layout
-	const std::vector<D3D11_INPUT_ELEMENT_DESC> fire_ied
-		=
+	const std::vector<D3D11_INPUT_ELEMENT_DESC> fire_ied =
 	{
-		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
-		D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"Texcoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
-		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"Texcoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
-	mLayout = std::make_unique<InputLayout>(
-		mDevice.Get(), fire_ied, &mVS);
+	
+	mLayout = std::make_unique<InputLayout>(mDevice.Get(), fire_ied, &mVS);
 
 	//init constant buffer
 	mMatricesBuffer = std::make_unique<CBuffer<matricesBuffer>>();
@@ -61,13 +55,22 @@ Fire::Fire(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+	
 	HRESULT hr = mDevice->CreateBlendState(&blendStateDescription, mBlendOn.GetAddressOf());
+	
 	if (FAILED(hr))
+	{
 		Error::Log(hr, "Failed to create alpha blend state.");
+	}
+	
 	blendStateDescription.RenderTarget[0].BlendEnable = FALSE;
+	
 	hr = mDevice->CreateBlendState(&blendStateDescription, mBlendOff.GetAddressOf());
+	
 	if (FAILED(hr))
+	{
 		Error::Log(hr, "Failed to create alpha blend state.");
+	}
 }
 
 void Fire::Draw(Camera3D cam, float frameTime)
@@ -75,8 +78,7 @@ void Fire::Draw(Camera3D cam, float frameTime)
 	//Billboarding
 	XMFLOAT3 cameraPos = cam.GetPositionFloat3();
 	XMFLOAT3 modelPosition = XMFLOAT3(posX, posY, posZ);
-	double angle = atan2(modelPosition.x - cameraPos.x,
-		modelPosition.z - cameraPos.z) * (180.0 / XM_PI);
+	double angle = atan2(modelPosition.x - cameraPos.x, modelPosition.z - cameraPos.z) * (180.0 / XM_PI);
 	float rot = static_cast<float>(angle) * 0.0174532925f;
 
 	//set vertex buffer
@@ -91,9 +93,7 @@ void Fire::Draw(Camera3D cam, float frameTime)
 	mVS.Bind(mContext.Get());
 	mPS.Bind(mContext.Get());
 	//bind matrix constant buffer
-	mMatricesBuffer->data.world = XMMatrixIdentity() * XMMatrixTranslation(modelPosition.x, modelPosition.y, modelPosition.z) *
-		XMMatrixRotationY(rot) *
-		XMMatrixScaling(scaleX, scaleY, scaleZ);
+	mMatricesBuffer->data.world = XMMatrixIdentity() * XMMatrixTranslation(modelPosition.x, modelPosition.y, modelPosition.z) * XMMatrixRotationY(rot) * XMMatrixScaling(scaleX, scaleY, scaleZ);
 	mMatricesBuffer->data.view = cam.GetViewMatrix();
 	mMatricesBuffer->data.proj = cam.GetProjectionMatrix();
 	mMatricesBuffer->MapData();

@@ -12,12 +12,15 @@ Camera3D::Camera3D()
 void Camera3D::SetProjectionValues(float fovDegrees, float aspectRatio, float nearZ, float farZ, bool ortho)
 {
 	float fovRadians = (fovDegrees / 360.0f) * XM_2PI;
+	
 	if (ortho)
 	{
 		this->projectionMatrix = XMMatrixOrthographicLH(3000.0f, 3000.0f, 0.1f, 6000.0f);
 	}
 	else
+	{
 		this->projectionMatrix = XMMatrixPerspectiveFovLH(fovRadians, aspectRatio, nearZ, farZ);
+	}
 }
 
 const XMMATRIX& Camera3D::GetViewMatrix() const
@@ -114,7 +117,9 @@ void Camera3D::SetLookAtPos(XMFLOAT3 lookAtPos)
 {
 	//Verify that look at pos is not the same as cam pos. They cannot be the same as that wouldn't make sense and would result in undefined behavior.
 	if (lookAtPos.x == this->pos.x && lookAtPos.y == this->pos.y && lookAtPos.z == this->pos.z)
+	{
 		return;
+	}
 
 	lookAtPos.x = this->pos.x - lookAtPos.x;
 	lookAtPos.y = this->pos.y - lookAtPos.y;
@@ -133,7 +138,9 @@ void Camera3D::SetLookAtPos(XMFLOAT3 lookAtPos)
 		yaw = float(atan(lookAtPos.x / lookAtPos.z));
 	}
 	if (lookAtPos.z > 0)
+	{
 		yaw += XM_PI;
+	}
 
 	this->SetRotation(pitch, yaw, 0.0f);
 }

@@ -17,15 +17,11 @@ static BOOL emessiveEnabled;
 static BOOL brightnessRender;
 static float emessiveIntensity = 1.0f;
 
-DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
-	:
-	mDevice(pDevice),
-	mContext(pContext),
-	mWidth(width),
-	mHeight(height)
+DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height) : mDevice(pDevice), mContext(pContext), mWidth(width), mHeight(height)
 {
 	mLightBuffer = std::make_unique<CBuffer<DirectLight>>();
 	mLightBuffer->Init(pDevice, pContext);
+
 	//Light camera 3d
 	mLightCam.SetPosition(lightDirection.x, lightDirection.y, lightDirection.z);
 	mLightCam.SetProjectionValues(90.0f, static_cast<float>(width) / static_cast<float>(height), 0.01f, 999.0f, true);
@@ -34,38 +30,58 @@ DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 	//set directional light saved values
 	directLightSettings.OpenFileRead("directional_light_settings.cfg");
-	SetDireciton(std::stof(directLightSettings.GetInfo(0)), std::stof(directLightSettings.GetInfo(1)),
-		std::stof(directLightSettings.GetInfo(2)));
-	SetAmbientIntensity(std::stof(
-		directLightSettings.GetInfo(3)));
-	SetDiffuseIntensity(std::stof(
-		directLightSettings.GetInfo(4)));
-	SetReflectionIntensity(std::stof(
-		directLightSettings.GetInfo(5)));
-	SetSpecularIntensity(std::stof(
-		directLightSettings.GetInfo(6)));
-	SetBias(std::stof(
-		directLightSettings.GetInfo(7)));
+	SetDireciton(std::stof(directLightSettings.GetInfo(0)), std::stof(directLightSettings.GetInfo(1)), std::stof(directLightSettings.GetInfo(2)));
+	SetAmbientIntensity(std::stof(directLightSettings.GetInfo(3)));
+	SetDiffuseIntensity(std::stof(directLightSettings.GetInfo(4)));
+	SetReflectionIntensity(std::stof(directLightSettings.GetInfo(5)));
+	SetSpecularIntensity(std::stof(directLightSettings.GetInfo(6)));
+	SetBias(std::stof(directLightSettings.GetInfo(7)));
+	
 	if (directLightSettings.GetInfo(8) == "1")
+	{
 		SetNormalMapEnabled(TRUE);
+	}
 	else
+	{
 		SetNormalMapEnabled(FALSE);
+	}
+	
 	if (directLightSettings.GetInfo(9) == "1")
+	{
 		SetReflectionEnabled(TRUE);
+	}
 	else
+	{
 		SetReflectionEnabled(FALSE);
+	}
+	
 	if (directLightSettings.GetInfo(10) == "1")
+	{
 		SetPCFEnabled(TRUE);
+	}
 	else
+	{
 		SetPCFEnabled(FALSE);
+	}
+	
 	if (directLightSettings.GetInfo(11) == "1")
+	{
 		SetAlphaCEnabled(TRUE);
+	}
 	else
+	{
 		SetAlphaCEnabled(FALSE);
+	}
+	
 	if (directLightSettings.GetInfo(12) == "1")
+	{
 		emessiveEnabled = TRUE;
+	}
 	else
+	{
 		emessiveEnabled = FALSE;
+	}
+	
 	emessiveIntensity = std::stof(directLightSettings.GetInfo(13).c_str());
 	directLightSettings.CloseFile();
 	
@@ -77,14 +93,12 @@ DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	pVS.Init(L"ColorVertex.cso", mDevice.Get());
 	pPS.Init(L"ColorPixel.cso", mDevice.Get());
 	//init and create input layout
-	const std::vector<D3D11_INPUT_ELEMENT_DESC> direct_ied
-		=
+	const std::vector<D3D11_INPUT_ELEMENT_DESC> direct_ied =
 	{
-		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
-		D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"Color", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
-		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"Color", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
+
 	pLayout = std::make_unique<InputLayout>(pDevice, direct_ied, &pVS);
 
 	pModel.InitNoMtl("Models\\sphere_hq.obj", pDevice, pContext);
@@ -130,9 +144,22 @@ void DirectionalLight::BindCB(Camera3D cam, UINT slot)
 
 void DirectionalLight::DrawUI() noexcept
 {
-	mUI.DirectionalLigth(&diffuseColor, &lightDirection, &ambientColor, &ambientIntensity, &normalMapEnabled,
-		&specularIntensityC, &diffuseIntensityC, &reflectionEnabled, &reflectionIntensity, &bias, &pcfEnabled,
-		&emessiveEnabled, &emessiveIntensity);
+	mUI.DirectionalLigth
+	(
+		&diffuseColor, 
+		&lightDirection, 
+		&ambientColor, 
+		&ambientIntensity, 
+		&normalMapEnabled,
+		&specularIntensityC, 
+		&diffuseIntensityC, 
+		&reflectionEnabled, 
+		&reflectionIntensity, 
+		&bias, 
+		&pcfEnabled,
+		&emessiveEnabled, 
+		&emessiveIntensity
+	);
 }
 
 Camera3D DirectionalLight::GetLightCamera()
@@ -150,8 +177,7 @@ void DirectionalLight::SetDireciton(XMFLOAT3 value)
 	lightDirection = value;
 }
 
-void DirectionalLight::SetDireciton(float x, float y,
-	float z)
+void DirectionalLight::SetDireciton(float x, float y, float z)
 {
 	lightDirection = XMFLOAT3(x,y,z);
 }

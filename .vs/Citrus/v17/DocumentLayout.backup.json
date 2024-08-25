@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\GitHub\\Citrus\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C746A4A2-C9E1-4102-9D01-23F85B22E60C}|Citrus\\Citrus.vcxproj|C:\\GitHub\\Citrus\\Citrus\\SkyBox.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{C746A4A2-C9E1-4102-9D01-23F85B22E60C}|Citrus\\Citrus.vcxproj|solutionrelative:Citrus\\SkyBox.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{C746A4A2-C9E1-4102-9D01-23F85B22E60C}|Citrus\\Citrus.vcxproj|C:\\GitHub\\Citrus\\Citrus\\DepthStencil.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{C746A4A2-C9E1-4102-9D01-23F85B22E60C}|Citrus\\Citrus.vcxproj|solutionrelative:Citrus\\DepthStencil.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,14 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "SkyBox.h",
-              "DocumentMoniker": "C:\\GitHub\\Citrus\\Citrus\\SkyBox.h",
-              "RelativeDocumentMoniker": "Citrus\\SkyBox.h",
-              "ToolTip": "C:\\GitHub\\Citrus\\Citrus\\SkyBox.h",
-              "RelativeToolTip": "Citrus\\SkyBox.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-08-25T08:52:38.277Z",
+              "Title": "DepthStencil.cpp",
+              "DocumentMoniker": "C:\\GitHub\\Citrus\\Citrus\\DepthStencil.cpp",
+              "RelativeDocumentMoniker": "Citrus\\DepthStencil.cpp",
+              "ToolTip": "C:\\GitHub\\Citrus\\Citrus\\DepthStencil.cpp",
+              "RelativeToolTip": "Citrus\\DepthStencil.cpp",
+              "ViewState": "AgIAAHEAAAAAAAAAAAAQwJMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-08-25T09:26:07.221Z",
               "EditorCaption": ""
             }
           ]

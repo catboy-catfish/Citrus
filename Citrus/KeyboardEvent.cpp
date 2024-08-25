@@ -1,16 +1,8 @@
 #include "KeyboardEvent.h"
 
-KeyboardEvent::KeyboardEvent()
-	:
-	type(EventType::Invalid),
-	key(0u)
-{}
+KeyboardEvent::KeyboardEvent() : type(EventType::Invalid), key(0u) {}
 
-KeyboardEvent::KeyboardEvent(const EventType type, const unsigned char key)
-	:
-	type(type),
-	key(key)
-{}
+KeyboardEvent::KeyboardEvent(const EventType type, const unsigned char key) : type(type), key(key) {}
 
 bool KeyboardEvent::IsPress() const
 {

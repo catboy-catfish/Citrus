@@ -1,26 +1,29 @@
 #include "App.h"
 #pragma warning(disable : 4996)
 
-void App::Init(const std::string wndName, const std::string className, const HINSTANCE hInstance, const int width, const int height,
-	double& version)
+void App::Init(const std::string wndName, const std::string className, const HINSTANCE hInstance, const int width, const int height, double& version)
 {
 	versionStr = std::to_string(version);
 	versionStr = versionStr.erase(versionStr.find_last_not_of('0') + 1, std::string::npos);
 	this->width = width;
 	this->height = height;
 	timer.Start();
+
 	//Overloaded initialize window
 	if (!wnd.InitializeWindow(wndName, className, hInstance, width, height))
 	{
 		Error::Log("Something happened when initialize the window (overload)");
 	}
 
+
 	//set saved values
 	SetSavedValues();
+	
 	if (!gfx.InitializeGraphics(wnd.GetHWND(), width, height))
 	{
 		Error::Log("Failed to initialize graphics");
 	}
+	
 	//set saved values
 	SetSavedValues2();
 }
@@ -29,6 +32,7 @@ void App::Update() noexcept
 {
 	const float deltaTime = static_cast<float>(timer.GetMilisecondsElapsed());
 	timer.Restart();
+	
 	//Set any key to any event
 	while (!keyboard.KeyBufferIsEmpty())
 	{
@@ -40,7 +44,9 @@ void App::Update() noexcept
 			SaveValues();
 		}
 	}
+	
 	float camera_speed = 0.0005f;
+	
 	//Set any mouse event to any event
 	while (!mouse.EventBufferIsEmpty())
 	{
@@ -128,6 +134,7 @@ bool App::ProcessMessages(HINSTANCE hInstance) noexcept
 	MSG msg;
 	HWND hwnd = wnd.GetHWND();
 	ZeroMemory(&msg, sizeof(MSG));
+	
 	//Get Message and dispatch theese messages
 	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
@@ -156,59 +163,90 @@ void App::SetSavedValues()
 {
 	//set camera saved values
 	cameraSetting.OpenFileRead("camera_settings.cfg");
-	gfx.cam3D.SetPosition(std::stof(cameraSetting.GetInfo(0).c_str()), std::stof(cameraSetting.GetInfo(1).c_str()),
-		std::stof(cameraSetting.GetInfo(2).c_str()));
-	gfx.cam3D.SetRotation(std::stof(cameraSetting.GetInfo(3).c_str()), std::stof(cameraSetting.GetInfo(4).c_str()),
-		std::stof(cameraSetting.GetInfo(3).c_str()));
+	gfx.cam3D.SetPosition(std::stof(cameraSetting.GetInfo(0).c_str()), std::stof(cameraSetting.GetInfo(1).c_str()), std::stof(cameraSetting.GetInfo(2).c_str()));
+	gfx.cam3D.SetRotation(std::stof(cameraSetting.GetInfo(3).c_str()), std::stof(cameraSetting.GetInfo(4).c_str()), std::stof(cameraSetting.GetInfo(3).c_str()));
 	cameraSetting.CloseFile();
 
 	//set dev menu saved values
 	devMenuSettings.OpenFileRead("devmenu_settings.cfg");
 	if (devMenuSettings.GetInfo(0) == "1")
+	{
 		GameObject::SetDepthBufferEnabled(true);
+	}
 	else
+	{
 		GameObject::SetDepthBufferEnabled(false);
+	}
 
 	if (devMenuSettings.GetInfo(1) == "1")
+	{
 		FSQuad::SetBlurEnabled(true);
+	}
 	else
+	{
 		FSQuad::SetBlurEnabled(false);
-
+	}
+	
 	FSQuad::SetBlurIntensity(std::stof(devMenuSettings.GetInfo(2).c_str()));
 
 	if (devMenuSettings.GetInfo(3) == "1")
+	{
 		GameObject::SetFogEnabled(true);
+	}
 	else
+	{
 		GameObject::SetFogEnabled(false);
-
+	}
+	
 	GameObject::SetFogStart(std::stof(devMenuSettings.GetInfo(4).c_str()));
 	GameObject::SetFogEnd(std::stof(devMenuSettings.GetInfo(5).c_str()));
 
 	if (devMenuSettings.GetInfo(6) == "1")
+	{
 		GameObject::SetWireframeEnabled(true);
+	}
 	else
+	{
 		GameObject::SetWireframeEnabled(false);
+	}
 
 	if (devMenuSettings.GetInfo(7) == "1")
+	{
 		GridMap::setRender(true);
+	}
 	else
+	{
 		GridMap::setRender(false);
+	}
+	
 	gfx.msaaQuality = static_cast<UINT>(std::atoi(devMenuSettings.GetInfo(8).c_str()));
 
 	if (devMenuSettings.GetInfo(9) == "1")
+	{
 		gfx.msaaEnabled = true;
+	}
 	else
+	{
 		gfx.msaaEnabled = false;
+	}
 
 	if (devMenuSettings.GetInfo(10) == "1")
+	{
 		FSQuad::SetFxaaEnabled(true);
+	}
 	else
+	{
 		FSQuad::SetFxaaEnabled(false);
+	}
 
 	if (devMenuSettings.GetInfo(11) == "1")
+	{
 		FSQuad::SetSSAOEnabled(TRUE);
+	}
 	else
+	{
 		FSQuad::SetSSAOEnabled(FALSE);
+	}
 
 	FSQuad::SetArea(std::stof(devMenuSettings.GetInfo(12).c_str()));
 	FSQuad::SetBase(std::stof(devMenuSettings.GetInfo(13).c_str()));
@@ -216,30 +254,49 @@ void App::SetSavedValues()
 	FSQuad::SetTotalStrength(std::stof(devMenuSettings.GetInfo(15).c_str()));
 	FSQuad::SetExposure(std::stof(devMenuSettings.GetInfo(16).c_str()));
 	FSQuad::SetGamma(std::stof(devMenuSettings.GetInfo(17).c_str()));
+	
 	if (devMenuSettings.GetInfo(18) == "1")
+	{
 		FSQuad::SetToneMappingEnabled(TRUE);
+	}
 	else
+	{
 		FSQuad::SetToneMappingEnabled(FALSE);
+	}
 
 	if (devMenuSettings.GetInfo(19) == "1")
+	{
 		FSQuad::SetBloomEnabled(TRUE);
+	}
 	else
+	{
 		FSQuad::SetBloomEnabled(FALSE);
-	
+	}
+
 	FSQuad::SetBloomIntensity(std::stof(devMenuSettings.GetInfo(20).c_str()));
 	FSQuad::SetAutoExposureEnabled(static_cast<BOOL>(std::stof(devMenuSettings.GetInfo(21).c_str())));
 	FSQuad::SetKuwaharaEnabled(static_cast<BOOL>(std::stof(devMenuSettings.GetInfo(22).c_str())));
+	
 	if (devMenuSettings.GetInfo(23) == "1")
+	{
 		FSQuad::SetSSREnabled(TRUE);
+	}
 	else
+	{
 		FSQuad::SetSSREnabled(FALSE);
+	}
+	
 	FSQuad::SetMinRaySteps(std::stof(devMenuSettings.GetInfo(24).c_str()));
 	FSQuad::SetReflectivity(std::stof(devMenuSettings.GetInfo(25).c_str()));
 
 	if (devMenuSettings.GetInfo(25) == "1")
+	{
 		gfx.pDriverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE;
+	}
 	else
+	{
 		gfx.pDriverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_REFERENCE;
+	}
 
 	//close dev menu file
 	devMenuSettings.CloseFile();
@@ -255,10 +312,16 @@ void App::SetSavedValues()
 	Particle::SetParticleMax(std::atoi(fxMenuSettings.GetInfo(6).c_str()));
 	Particle::SetParticlesPerSecond(std::stof(fxMenuSettings.GetInfo(7)));
 	Particle::SetLifeTime(std::stof(fxMenuSettings.GetInfo(8)));
+	
 	if (fxMenuSettings.GetInfo(9) == "1")
+	{
 		Particle::SetIsLifeTime(true);
+	}
 	else
+	{
 		Particle::SetIsLifeTime(false);
+	}
+	
 	Particle::SetPosX(std::stof(fxMenuSettings.GetInfo(10)));
 	Particle::SetPosY(std::stof(fxMenuSettings.GetInfo(11)));
 	Particle::SetPosZ(std::stof(fxMenuSettings.GetInfo(12)));
@@ -293,10 +356,8 @@ void App::SetSavedValues2()
 {
 	//set camera saved values
 	cameraSetting.OpenFileRead("camera_settings.cfg");
-	gfx.cam3D.SetPosition(std::stof(cameraSetting.GetInfo(0).c_str()), std::stof(cameraSetting.GetInfo(1).c_str()),
-		std::stof(cameraSetting.GetInfo(2).c_str()));
-	gfx.cam3D.SetRotation(std::stof(cameraSetting.GetInfo(3).c_str()), std::stof(cameraSetting.GetInfo(4).c_str()),
-		std::stof(cameraSetting.GetInfo(3).c_str()));
+	gfx.cam3D.SetPosition(std::stof(cameraSetting.GetInfo(0).c_str()), std::stof(cameraSetting.GetInfo(1).c_str()), std::stof(cameraSetting.GetInfo(2).c_str()));
+	gfx.cam3D.SetRotation(std::stof(cameraSetting.GetInfo(3).c_str()), std::stof(cameraSetting.GetInfo(4).c_str()), std::stof(cameraSetting.GetInfo(3).c_str()));
 	cameraSetting.CloseFile();
 
 	//set path saved values
@@ -316,13 +377,11 @@ void App::SetSavedValues2()
 	settings.OpenFileRead("settings.cfg");
 	for (int i = 0; i < gfx.pGameObjects.size(); i++)
 	{
-		gfx.pGameObjects[i]->GetMesh()->SetPos(std::stof(settings.GetInfo(0).c_str()), std::stof(settings.GetInfo(1).c_str()),
-			std::stof(settings.GetInfo(2).c_str()));
-		gfx.pGameObjects[i]->GetMesh()->SetRot(std::stof(settings.GetInfo(3).c_str()), std::stof(settings.GetInfo(4).c_str()),
-			std::stof(settings.GetInfo(5).c_str()));
-		gfx.pGameObjects[i]->GetMesh()->SetScale(std::stof(settings.GetInfo(6).c_str()), std::stof(settings.GetInfo(7).c_str()),
-			std::stof(settings.GetInfo(8).c_str()));
+		gfx.pGameObjects[i]->GetMesh()->SetPos(std::stof(settings.GetInfo(0).c_str()), std::stof(settings.GetInfo(1).c_str()), std::stof(settings.GetInfo(2).c_str()));
+		gfx.pGameObjects[i]->GetMesh()->SetRot(std::stof(settings.GetInfo(3).c_str()), std::stof(settings.GetInfo(4).c_str()), std::stof(settings.GetInfo(5).c_str()));
+		gfx.pGameObjects[i]->GetMesh()->SetScale(std::stof(settings.GetInfo(6).c_str()), std::stof(settings.GetInfo(7).c_str()), std::stof(settings.GetInfo(8).c_str()));
 	}
+
 	settings.CloseFile();
 }
 
@@ -330,111 +389,63 @@ void App::SaveValues()
 {
 	//Directional Light
 	gfx.pDirectLight->directLightSettings.OpenFileWrite("directional_light_settings.cfg");
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Light Direction Z]:" + std::to_string(
-		gfx.pDirectLight->GetDirection().z));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Light Direction Y]:" + std::to_string(
-		gfx.pDirectLight->GetDirection().y));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Light Direction X]:" + std::to_string(
-		gfx.pDirectLight->GetDirection().x));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Ambient Intensity]:" + std::to_string(
-		gfx.pDirectLight->GetAmbientIntensity()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Diffuse Intensity]:" + std::to_string(
-		gfx.pDirectLight->GetDiffuseIntensity()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Reflection Intensity]:" + std::to_string(
-		gfx.pDirectLight->GetReflectionIntensity()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Specular Intensity]:" + std::to_string(
-		gfx.pDirectLight->GetSpecularIntensity()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Shadow Bias]:" + std::to_string(
-		gfx.pDirectLight->GetBias()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Normal Map Enabled]:" + std::to_string(
-		gfx.pDirectLight->GetNormalMapEnabled()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Reflection Enabled]:" + std::to_string(
-		gfx.pDirectLight->GetReflectionEnabled()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[PCF Filter Enabled]:" + std::to_string(
-		gfx.pDirectLight->GetPCFEnabled()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Alpha Clip Enabled]:" + std::to_string(
-		*gfx.pDirectLight->GetAlphaCEnabled()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Emessive Map Enabled]:" + std::to_string(
-		*gfx.pDirectLight->GetEmessiveEnabled()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Emessive Intensity]:" + std::to_string(
-		gfx.pDirectLight->GetEmessiveIntensity()));
-	gfx.pDirectLight->directLightSettings.AddInfo(
-		gfx.pDirectLight->pDirectLightSavedItems);
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Light Direction Z]:" + std::to_string(gfx.pDirectLight->GetDirection().z));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Light Direction Y]:" + std::to_string(gfx.pDirectLight->GetDirection().y));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Light Direction X]:" + std::to_string(gfx.pDirectLight->GetDirection().x));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Ambient Intensity]:" + std::to_string(gfx.pDirectLight->GetAmbientIntensity()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Diffuse Intensity]:" + std::to_string(gfx.pDirectLight->GetDiffuseIntensity()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Reflection Intensity]:" + std::to_string(gfx.pDirectLight->GetReflectionIntensity()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Specular Intensity]:" + std::to_string(gfx.pDirectLight->GetSpecularIntensity()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Shadow Bias]:" + std::to_string(gfx.pDirectLight->GetBias()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Normal Map Enabled]:" + std::to_string(gfx.pDirectLight->GetNormalMapEnabled()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Reflection Enabled]:" + std::to_string(gfx.pDirectLight->GetReflectionEnabled()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[PCF Filter Enabled]:" + std::to_string(gfx.pDirectLight->GetPCFEnabled()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Alpha Clip Enabled]:" + std::to_string(*gfx.pDirectLight->GetAlphaCEnabled()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Emessive Map Enabled]:" + std::to_string(*gfx.pDirectLight->GetEmessiveEnabled()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Emessive Intensity]:" + std::to_string(gfx.pDirectLight->GetEmessiveIntensity()));
+	gfx.pDirectLight->directLightSettings.AddInfo(gfx.pDirectLight->pDirectLightSavedItems);
 	gfx.pDirectLight->directLightSettings.CloseFile();
 
 	//open camera txt, stores camera position and rotation data
 	cameraSetting.OpenFileWrite("camera_settings.cfg");
-	pCameraSavedItems.push_back("[Camera Position Z]:" + std::to_string(
-		gfx.cam3D.GetPositionFloat3().z));
-	pCameraSavedItems.push_back("[Camera Position Y]:" + std::to_string(
-		gfx.cam3D.GetPositionFloat3().y));
-	pCameraSavedItems.push_back("[Camera Position X]:" + std::to_string(
-		gfx.cam3D.GetPositionFloat3().x));
-	pCameraSavedItems.push_back("[Camera Rotation Z]:" + std::to_string(
-		gfx.cam3D.GetRotationFloat3().z));
-	pCameraSavedItems.push_back("[Camera Rotation Y]:" + std::to_string(
-		gfx.cam3D.GetRotationFloat3().y));
-	pCameraSavedItems.push_back("[Camera Rotation X]:" + std::to_string(
-		gfx.cam3D.GetRotationFloat3().x));
+	pCameraSavedItems.push_back("[Camera Position Z]:" + std::to_string(gfx.cam3D.GetPositionFloat3().z));
+	pCameraSavedItems.push_back("[Camera Position Y]:" + std::to_string(gfx.cam3D.GetPositionFloat3().y));
+	pCameraSavedItems.push_back("[Camera Position X]:" + std::to_string(gfx.cam3D.GetPositionFloat3().x));
+	pCameraSavedItems.push_back("[Camera Rotation Z]:" + std::to_string(gfx.cam3D.GetRotationFloat3().z));
+	pCameraSavedItems.push_back("[Camera Rotation Y]:" + std::to_string(gfx.cam3D.GetRotationFloat3().y));
+	pCameraSavedItems.push_back("[Camera Rotation X]:" + std::to_string(gfx.cam3D.GetRotationFloat3().x));
 	cameraSetting.AddInfo(pCameraSavedItems);
 	cameraSetting.CloseFile();
 
 	//open dev menu txt, stores dev menu settings
 	devMenuSettings.OpenFileWrite("devmenu_settings.cfg");
-	pDevMenuSavedItems.push_back("[Depth Buffer Enabled]:" + std::to_string(
-		*GameObject::GetDepthBufferEnabled()));
-	pDevMenuSavedItems.push_back("[Blur Enabled]:" + std::to_string(
-		*FSQuad::GetBlurEnabled()));
-	pDevMenuSavedItems.push_back("[Blur Intensity]:" + std::to_string(
-		*FSQuad::GetBlurIntensity()));
-	pDevMenuSavedItems.push_back("[Fog Enabled]:" + std::to_string(
-		*GameObject::GetFogEnabled()));
-	pDevMenuSavedItems.push_back("[Fog Start]:" + std::to_string(
-		*GameObject::GetFogStart()));
-	pDevMenuSavedItems.push_back("[Fog End]:" + std::to_string(
-		*GameObject::GetFogEnd()));
-	pDevMenuSavedItems.push_back("[Wireframe Enabled]:" + std::to_string(
-		*GameObject::GetWireframeEnabled()));
-	pDevMenuSavedItems.push_back("[Grid Map Enabled]:" + std::to_string(
-		*GridMap::getRender()));
-	pDevMenuSavedItems.push_back("[MSAA Quality]:" + std::to_string(
-		gfx.msaaQuality));
-	pDevMenuSavedItems.push_back("[MSAA Enabled]:" + std::to_string(
-		gfx.msaaEnabled));
-	pDevMenuSavedItems.push_back("[FXAA Enabled]:" + std::to_string(
-		*FSQuad::GetFxaaEnabled()));
-	pDevMenuSavedItems.push_back("[SSAO Enabled]:" + std::to_string(
-		*FSQuad::GetSSAOEnabled()));
-	pDevMenuSavedItems.push_back("[SSAO Area]:" + std::to_string(
-		*FSQuad::GetArea()));
-	pDevMenuSavedItems.push_back("[SSAO Base]:" + std::to_string(
-		*FSQuad::GetBase()));
-	pDevMenuSavedItems.push_back("[SSAO Radius]:" + std::to_string(
-		*FSQuad::GetRadius()));
-	pDevMenuSavedItems.push_back("[SSAO Total Strength]:" + std::to_string(
-		*FSQuad::GetTotalStrength()));
-	pDevMenuSavedItems.push_back("[Exposure]:" + std::to_string(
-		*FSQuad::GetExposure()));
-	pDevMenuSavedItems.push_back("[Gamma]:" + std::to_string(
-		*FSQuad::GetGamma()));
-	pDevMenuSavedItems.push_back("[Tone Mapping Enabled]:" + std::to_string(
-		*FSQuad::GetToneMappingEnabled()));
-	pDevMenuSavedItems.push_back("[Bloom Enabled]:" + std::to_string(
-		*FSQuad::GetBloomEnabled()));
-	pDevMenuSavedItems.push_back("[Bloom Intensity]:" + std::to_string(
-		*FSQuad::GetBloomIntensity()));
-	pDevMenuSavedItems.push_back("[Auto Expsoure]:" + std::to_string(
-		*FSQuad::GetAutoExposureEnabled()));
-	pDevMenuSavedItems.push_back("[Kuwahara]:" + std::to_string(
-		*FSQuad::GetKuwaharaEnabled()));
-	pDevMenuSavedItems.push_back("[SSR Enabled]:" + std::to_string(
-		*FSQuad::GetSSREnabled()));
-	pDevMenuSavedItems.push_back("[Min Ray Steps]:" + std::to_string(
-		*FSQuad::GetMinRaySteps()));
-	pDevMenuSavedItems.push_back("[Reflectivitiy]:" + std::to_string(
-		*FSQuad::GetReflectivity()));
-	pDevMenuSavedItems.push_back("[Driver Type]:" + std::to_string(
-		gfx.GetDriverType()));
+	pDevMenuSavedItems.push_back("[Depth Buffer Enabled]:" + std::to_string(*GameObject::GetDepthBufferEnabled()));
+	pDevMenuSavedItems.push_back("[Blur Enabled]:" + std::to_string(*FSQuad::GetBlurEnabled()));
+	pDevMenuSavedItems.push_back("[Blur Intensity]:" + std::to_string(*FSQuad::GetBlurIntensity()));
+	pDevMenuSavedItems.push_back("[Fog Enabled]:" + std::to_string(*GameObject::GetFogEnabled()));
+	pDevMenuSavedItems.push_back("[Fog Start]:" + std::to_string(*GameObject::GetFogStart()));
+	pDevMenuSavedItems.push_back("[Fog End]:" + std::to_string(*GameObject::GetFogEnd()));
+	pDevMenuSavedItems.push_back("[Wireframe Enabled]:" + std::to_string(*GameObject::GetWireframeEnabled()));
+	pDevMenuSavedItems.push_back("[Grid Map Enabled]:" + std::to_string(*GridMap::getRender()));
+	pDevMenuSavedItems.push_back("[MSAA Quality]:" + std::to_string(gfx.msaaQuality));
+	pDevMenuSavedItems.push_back("[MSAA Enabled]:" + std::to_string(gfx.msaaEnabled));
+	pDevMenuSavedItems.push_back("[FXAA Enabled]:" + std::to_string(*FSQuad::GetFxaaEnabled()));
+	pDevMenuSavedItems.push_back("[SSAO Enabled]:" + std::to_string(*FSQuad::GetSSAOEnabled()));
+	pDevMenuSavedItems.push_back("[SSAO Area]:" + std::to_string(*FSQuad::GetArea()));
+	pDevMenuSavedItems.push_back("[SSAO Base]:" + std::to_string(*FSQuad::GetBase()));
+	pDevMenuSavedItems.push_back("[SSAO Radius]:" + std::to_string(*FSQuad::GetRadius()));
+	pDevMenuSavedItems.push_back("[SSAO Total Strength]:" + std::to_string(*FSQuad::GetTotalStrength()));
+	pDevMenuSavedItems.push_back("[Exposure]:" + std::to_string(*FSQuad::GetExposure()));
+	pDevMenuSavedItems.push_back("[Gamma]:" + std::to_string(*FSQuad::GetGamma()));
+	pDevMenuSavedItems.push_back("[Tone Mapping Enabled]:" + std::to_string(*FSQuad::GetToneMappingEnabled()));
+	pDevMenuSavedItems.push_back("[Bloom Enabled]:" + std::to_string(*FSQuad::GetBloomEnabled()));
+	pDevMenuSavedItems.push_back("[Bloom Intensity]:" + std::to_string(*FSQuad::GetBloomIntensity()));
+	pDevMenuSavedItems.push_back("[Auto Expsoure]:" + std::to_string(*FSQuad::GetAutoExposureEnabled()));
+	pDevMenuSavedItems.push_back("[Kuwahara]:" + std::to_string(*FSQuad::GetKuwaharaEnabled()));
+	pDevMenuSavedItems.push_back("[SSR Enabled]:" + std::to_string(*FSQuad::GetSSREnabled()));
+	pDevMenuSavedItems.push_back("[Min Ray Steps]:" + std::to_string(*FSQuad::GetMinRaySteps()));
+	pDevMenuSavedItems.push_back("[Reflectivitiy]:" + std::to_string(*FSQuad::GetReflectivity()));
+	pDevMenuSavedItems.push_back("[Driver Type]:" + std::to_string(gfx.GetDriverType()));
 	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
 
@@ -553,23 +564,73 @@ void App::FPSCounter()
 	auto adapter_name = std::wstring(adapter_name_wchar);
 	//dev menu creation
 	UI::SetCanRendered(true);
-	UI::DeveloperUI(std::string(adapter_name.begin(), adapter_name.end()),cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetWireframeEnabled(),
-		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
-		GameObject::GetFogEnd(), &gfx.vsync, GridMap::getRender(),
-		GridMap::getColor(), &gfx, wnd.GetHWND(), this, &gfx.msaaEnabled, FSQuad::GetBlurEnabled(), 
-		FSQuad::GetBlurIntensity(), FSQuad::GetSSAOEnabled(), FSQuad::GetTotalStrength(), FSQuad::GetBase(),
-		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius(), FSQuad::GetExposure(), FSQuad::GetGamma(),
-		FSQuad::GetToneMappingEnabled(), FSQuad::GetBloomIntensity(), FSQuad::GetBloomEnabled(), versionStr,
-		FSQuad::GetSSREnabled(), FSQuad::GetMinRaySteps(), FSQuad::GetReflectivity(), gfx.pDriverType);
+
+	UI::DeveloperUI
+	(
+		std::string(adapter_name.begin(), adapter_name.end()),
+		cpu_usage_string.c_str() 
+		,fps.c_str(), 
+		&gfx.cam3D, 
+		GameObject::GetWireframeEnabled(),
+		GameObject::GetWireColor(), 
+		GameObject::GetFogEnabled(), 
+		GameObject::GetFogColor(), 
+		GameObject::GetFogStart(),
+		GameObject::GetFogEnd(), 
+		&gfx.vsync, 
+		GridMap::getRender(),
+		GridMap::getColor(), 
+		&gfx, wnd.GetHWND(), 
+		this, 
+		&gfx.msaaEnabled, 
+		FSQuad::GetBlurEnabled(), 
+		FSQuad::GetBlurIntensity(), 
+		FSQuad::GetSSAOEnabled(), 
+		FSQuad::GetTotalStrength(), 
+		FSQuad::GetBase(),
+		FSQuad::GetArea(), 
+		FSQuad::GetFallOff(), 
+		FSQuad::GetRadius(), 
+		FSQuad::GetExposure(), 
+		FSQuad::GetGamma(),
+		FSQuad::GetToneMappingEnabled(), 
+		FSQuad::GetBloomIntensity(), 
+		FSQuad::GetBloomEnabled(), 
+		versionStr,
+		FSQuad::GetSSREnabled(), 
+		FSQuad::GetMinRaySteps(), 
+		FSQuad::GetReflectivity(), 
+		gfx.pDriverType
+	);
+
 	//toolbar creation
-	UI::ToolBar(GridMap::getRender(),
+	UI::ToolBar
+	(
+		GridMap::getRender(),
 		GameObject::GetWireframeEnabled(),
 		GameObject::GetFogEnabled(), 
 		GameObject::GetDepthBufferEnabled(),
-		FSQuad::GetBlurEnabled(), &gfx.msaaEnabled, this, FSQuad::GetFxaaEnabled(), GameObject::GetBackCulling(),
-		GameObject::GetFrontCulling(), this, DirectionalLight::GetAlphaCEnabled(), FSQuad::GetSSAOEnabled(),
-		FSQuad::GetToneMappingEnabled(), FSQuad::GetBloomEnabled(), gfx.pGameObjects, gfx.pDevice.Get(),
-		gfx.pContext.Get(), width, height, FSQuad::GetAutoExposureEnabled(), versionStr, FSQuad::GetKuwaharaEnabled(),
-		FSQuad::GetSSREnabled());
+		FSQuad::GetBlurEnabled(), 
+		&gfx.msaaEnabled, 
+		this, 
+		FSQuad::GetFxaaEnabled(), 
+		GameObject::GetBackCulling(),
+		GameObject::GetFrontCulling(), 
+		this, 
+		DirectionalLight::GetAlphaCEnabled(), 
+		FSQuad::GetSSAOEnabled(),
+		FSQuad::GetToneMappingEnabled(), 
+		FSQuad::GetBloomEnabled(), 
+		gfx.pGameObjects, 
+		gfx.pDevice.Get(),
+		gfx.pContext.Get(), 
+		width, 
+		height, 
+		FSQuad::GetAutoExposureEnabled(), 
+		versionStr, 
+		FSQuad::GetKuwaharaEnabled(),
+		FSQuad::GetSSREnabled()
+	);
+
 	UI::SetCanRendered(false);
 }
